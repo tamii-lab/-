@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>健康科学クイズ</title>
+
+<!-- OGP -->
+<meta property="og:title" content="健康科学クイズ｜第1回目">
+<meta property="og:description" content="血糖値・体内時計・自律神経・ω3・腸脳相関を楽しく学べる健康科学クイズ">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tamii-lab.github.io/quiz1/">
+<meta property="og:image" content="https://tamii-lab.github.io/quiz1/ogp.png">
+
+<!-- Twitter / Threads -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="健康科学クイズ｜第1回目">
+<meta name="twitter:description" content="血糖値・体内時計・自律神経・ω3・腸脳相関を楽しく学べる健康科学クイズ">
+<meta name="twitter:image" content="https://tamii-lab.github.io/quiz1/ogp.png">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Yu Gothic",sans-serif;
+    background:linear-gradient(to bottom,#fff6d6,#fff);
+    color:#333;
+    padding:20px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+}
+
+/* タイトル */
+
+.main-title{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.main-title h1{
+    font-size:48px;
+    color:#ff6b6b;
+    margin-bottom:10px;
+    line-height:1.2;
+}
+
+.main-title p{
+    font-size:20px;
+    color:#666;
+}
+
+/* OGP画像 */
+
+.hero-image{
+    width:100%;
+    border-radius:25px;
+    margin-bottom:30px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* クイズカード */
+
+.quiz-card{
+    background:#fff;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.1);
+}
+
+.question{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:20px;
+    line-height:1.5;
+}
+
+.answer-btn{
+    width:100%;
+    border:none;
+    border-radius:18px;
+    padding:18px;
+    margin-bottom:15px;
+    font-size:22px;
+    font-weight:bold;
+    background:#f5f5f5;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.answer-btn:hover{
+    background:#ffe0e0;
+    transform:scale(1.02);
+}
+
+.correct{
+    background:#b8f5c0 !important;
+}
+
+.wrong{
+    background:#ffc8c8 !important;
+}
+
+.result{
+    margin-top:15px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.explanation{
+    margin-top:15px;
+    background:#fff5c7;
+    padding:18px;
+    border-radius:18px;
+    line-height:1.8;
+    font-size:18px;
+}
+
+/* 次ボタン */
+
+.next-btn{
+    width:100%;
+    border:none;
+    border-radius:18px;
+    padding:18px;
+    margin-top:20px;
+    font-size:24px;
+    font-weight:bold;
+    background:#ff6b6b;
+    color:white;
+    cursor:pointer;
+}
+
+/* スコア */
+
+.score{
+    text-align:center;
+    font-size:24px;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+/* スマホ対応 */
+
+@media (max-width:768px){
+
+    body{
+        padding:12px;
+    }
+
+    .main-title h1{
+        font-size:34px;
+    }
+
+    .main-title p{
+        font-size:16px;
+    }
+
+    .question{
+        font-size:22px;
+    }
+
+    .answer-btn{
+        font-size:18px;
+        padding:16px;
+    }
+
+    .result{
+        font-size:20px;
+    }
+
+    .explanation{
+        font-size:16px;
+    }
+
+    .next-btn{
+        font-size:20px;
+    }
+
+    .score{
+        font-size:20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="main-title">
+        <h1>健康科学クイズ<br>第1回</h1>
+        <p>あなたは何問正解できますか？🧠</p>
+    </div>
+
+    <!-- OGP画像 -->
+    <img src="ogp.png" class="hero-image">
+
+    <div class="score" id="score">
+        スコア：0 / 0
+    </div>
+
+    <div class="quiz-card">
+
+        <div class="question" id="question"></div>
+
+        <div id="answers"></div>
+
+        <div class="result" id="result"></div>
+
+        <div class="explanation" id="explanation"></div>
+
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()" style="display:none;">
+            次の問題へ
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+const quiz = [
+
+{
+q:"『7時間寝たのにだるい…』原因として大事なのは？",
+answers:[
+"睡眠時間だけ",
+"睡眠の不規則さ",
+"枕の高さ",
+"夢の内容"
+],
+correct:1,
+explanation:"大事なのは睡眠時間だけでなく、毎日いつ寝て、いつ光を浴びるかです。"
+},
+
+{
+q:"深呼吸が落ち着きに関係する理由は？",
+answers:[
+"筋肉が増えるから",
+"自律神経に働きかけるから",
+"骨が強くなるから",
+"視力が上がるから"
+],
+correct:1,
+explanation:"呼吸は自律神経にアプローチできる数少ない手段です。"
+},
+
+{
+q:"ω3の『3』は何を意味する？",
+answers:[
+"カロリー",
+"メチル末端から最初の二重結合位置",
+"吸収速度",
+"魚の種類"
+],
+correct:1,
+explanation:"ω3はメチル末端から3番目に最初の二重結合がある脂肪酸です。"
+}
+
+];
+
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+
+function loadQuestion(){
+
+answered = false;
+
+document.getElementById("result").innerHTML = "";
+document.getElementById("explanation").innerHTML = "";
+document.getElementById("nextBtn").style.display = "none";
+
+const q = quiz[currentQuestion];
+
+document.getElementById("question").innerHTML =
+`Q${currentQuestion+1}. ${q.q}`;
+
+const answersDiv = document.getElementById("answers");
+answersDiv.innerHTML = "";
+
+q.answers.forEach((answer,index)=>{
+
+const button = document.createElement("button");
+
+button.innerHTML = answer;
+
+button.classList.add("answer-btn");
+
+button.onclick = ()=>checkAnswer(index,button);
+
+answersDiv.appendChild(button);
+
+});
+
+updateScore();
+
+}
+
+function checkAnswer(index,button){
+
+if(answered) return;
+
+answered = true;
+
+const q = quiz[currentQuestion];
+
+const buttons = document.querySelectorAll(".answer-btn");
+
+buttons.forEach((btn,i)=>{
+
+if(i === q.correct){
+btn.classList.add("correct");
+}
+
+});
+
+if(index === q.correct){
+
+score++;
+
+document.getElementById("result").innerHTML =
+"正解！✨";
+
+}else{
+
+button.classList.add("wrong");
+
+document.getElementById("result").innerHTML =
+"惜しい！";
+
+}
+
+document.getElementById("explanation").innerHTML =
+q.explanation;
+
+document.getElementById("nextBtn").style.display =
+"block";
+
+updateScore();
+
+}
+
+function nextQuestion(){
+
+currentQuestion++;
+
+if(currentQuestion >= quiz.length){
+
+showFinal();
+
+}else{
+
+loadQuestion();
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+}
+
+function updateScore(){
+
+document.getElementById("score").innerHTML =
+`スコア：${score} / ${currentQuestion + (answered ? 1 : 0)}`;
+
+}
+
+function showFinal(){
+
+document.querySelector(".quiz-card").innerHTML =
+
+`
+<div style="text-align:center;">
+
+<h2 style="font-size:42px;margin-bottom:20px;">
+結果発表🎉
+</h2>
+
+<p style="font-size:34px;font-weight:bold;margin-bottom:20px;">
+${score} / ${quiz.length}
+</p>
+
+<p style="font-size:24px;line-height:1.8;">
+健康科学マスターに近づいています✨
+</p>
+
+<button class="next-btn" onclick="location.reload()">
+もう一度挑戦する
+</button>
+
+</div>
+`;
+
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
